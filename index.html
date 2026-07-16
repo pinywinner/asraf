@@ -113,6 +113,49 @@
             color: #1F2023;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
+
+        /* Animated gradient glow border (traces around the card) */
+        @property --glow-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        .google-editorial-card { position: relative; isolation: isolate; }
+        .google-editorial-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.5px;                 /* border thickness */
+            background: conic-gradient(from var(--glow-angle),
+                #4285F4, #34A853, #FBBC05, #EA4335, #4285F4);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.45s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .google-editorial-card:hover::before {
+            opacity: 1;
+            animation: glow-spin 4s linear infinite;
+        }
+        @keyframes glow-spin {
+            to { --glow-angle: 360deg; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .google-editorial-card:hover::before { animation: none; }
+        }
+
+        /* Mobile tabs: show only the active tab's label; others are icon-only */
+        @media (max-width: 639px) {
+            .tab-btn .tab-label { display: none; }
+            .tab-btn.active .tab-label { display: inline; }
+        }
     </style>
     
     <script>
@@ -240,17 +283,24 @@
         <div class="fade-in-up" style="animation-delay: 0.4s;">
 
             <!-- Tab bar (segmented control) -->
-            <div class="inline-flex items-center gap-1 p-1.5 rounded-full bg-gray-100 border border-gray-200 mb-4 sm:mb-6">
-                <button type="button" data-tab="vendors"
-                        class="tab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300">
+            <div class="overflow-x-auto custom-scrollbar -mx-1 px-1 mb-4 sm:mb-6">
+            <div class="inline-flex items-center gap-1 p-1.5 rounded-full bg-gray-100 border border-gray-200 w-max">
+                <button type="button" data-tab="vendors" aria-label="Vendor Breakdown"
+                        class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     <span class="material-symbols-outlined" style="font-size:18px;">groups</span>
-                    <span>Vendor Breakdown</span>
+                    <span class="tab-label">Vendor Breakdown</span>
                 </button>
-                <button type="button" data-tab="transactions"
-                        class="tab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300">
+                <button type="button" data-tab="transactions" aria-label="Transaction Details"
+                        class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     <span class="material-symbols-outlined" style="font-size:18px;">receipt_long</span>
-                    <span>Transaction Details</span>
+                    <span class="tab-label">Transaction Details</span>
                 </button>
+                <button type="button" data-tab="schedule" aria-label="Upcoming Schedule"
+                        class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
+                    <span class="material-symbols-outlined" style="font-size:18px;">event_upcoming</span>
+                    <span class="tab-label">Upcoming Schedule</span>
+                </button>
+            </div>
             </div>
 
             <!-- Panel: Vendor Breakdown -->
@@ -317,6 +367,29 @@
                     <!-- Mobile: stacked cards (below sm) -->
                     <div id="mobile-cards" class="sm:hidden flex flex-col gap-3 px-4 pb-6">
                         <!-- Cards injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Upcoming Schedule -->
+            <div id="panel-schedule" class="tab-panel hidden">
+                <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
+                        <div>
+                            <div class="inline-flex items-center gap-2 mb-2">
+                                <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark">Upcoming Schedule</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide bg-google-yellow_light text-[#B06000] border border-[#F9E3A0]">Estimated</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Planned remaining payments &mdash; not yet paid</p>
+                        </div>
+                        <div class="text-left sm:text-right">
+                            <p class="text-2xl sm:text-3xl font-black text-google-dark number-font leading-none" id="schedule-total">₪0</p>
+                            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-1">Total Outstanding</p>
+                        </div>
+                    </div>
+
+                    <div id="schedule-body" class="flex flex-col gap-6 sm:gap-8">
+                        <!-- Month groups injected via JS -->
                     </div>
                 </div>
             </div>
@@ -426,10 +499,26 @@
         const totalBalance = totalProjectEstimated - totalPaid;
         const totalPercentage = ((totalPaid / totalProjectEstimated) * 100).toFixed(2);
 
-        document.getElementById('kpi-total-paid').innerText = formatCurrency(Math.round(totalPaid));
-        document.getElementById('kpi-percentage').innerText = totalPercentage + '%';
-        document.getElementById('kpi-balance').innerText = formatCurrency(Math.round(totalBalance));
-        document.getElementById('kpi-estimated').innerText = formatCurrency(totalProjectEstimated);
+        // Animated count-up for the KPI numbers
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+        function animateCount(el, target, formatter, duration = 1300) {
+            if (prefersReducedMotion || !el) { if (el) el.innerText = formatter(target); return; }
+            const start = performance.now();
+            function frame(now) {
+                const p = Math.min((now - start) / duration, 1);
+                el.innerText = formatter(target * easeOutCubic(p));
+                if (p < 1) requestAnimationFrame(frame);
+                else el.innerText = formatter(target);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        animateCount(document.getElementById('kpi-total-paid'), Math.round(totalPaid), v => formatCurrency(Math.round(v)));
+        animateCount(document.getElementById('kpi-percentage'), parseFloat(totalPercentage), v => v.toFixed(2) + '%');
+        animateCount(document.getElementById('kpi-balance'), Math.round(totalBalance), v => formatCurrency(Math.round(v)));
+        animateCount(document.getElementById('kpi-estimated'), totalProjectEstimated, v => formatCurrency(Math.round(v)));
 
         const getVendorColor = (name) => {
             const colors = ['bg-[#E8F0FE] text-[#1A73E8]', 'bg-[#FCE8E6] text-[#D93025]', 'bg-[#E6F4EA] text-[#1E8E3E]', 'bg-[#FEF7E0] text-[#F29900]', 'bg-[#F3E8FD] text-[#9334E6]'];
@@ -591,6 +680,66 @@
         };
         renderVendors();
 
+        // ---- Upcoming Schedule (planned remaining payments, by month) ----
+        // Sourced from the Excel "Monthly schedule" sheet. These are estimates,
+        // not payments already made. Totals reconcile to the Total Balance KPI.
+        const scheduleData = [
+            { month: "July 2026", items: [
+                { category: "Landscaping / Garden Development", cost: 170000 },
+                { category: "Windows & Aluminum",               cost: 300000 },
+                { category: "Carpentry & Joinery",              cost: 100000 },
+                { category: "Electrical Appliances",            cost: 400000 },
+                { category: "Via Communication",                cost: 159058 },
+                { category: "Lighting Fixtures",                cost: 70000 },
+                { category: "Hershy's Works",                   cost: 295000 }
+            ]},
+            { month: "August 2026", items: [
+                { category: "Marble floor polishing",           cost: 80000 },
+                { category: "Naftali Pearl A/C",                cost: 39908 },
+                { category: "Security Bars",                    cost: 150000 },
+                { category: "Pergola",                          cost: 1000000 },
+                { category: "Shower doors",                     cost: 70000 },
+                { category: "Hershy's Works",                   cost: 177000 }
+            ]},
+            { month: "September 2026", items: [
+                { category: "Hershy's Works",                   cost: 177000 }
+            ]}
+        ];
+
+        const renderSchedule = () => {
+            const body = document.getElementById('schedule-body');
+            body.innerHTML = '';
+            let grandTotal = 0;
+
+            scheduleData.forEach(group => {
+                const monthTotal = group.items.reduce((s, i) => s + i.cost, 0);
+                grandTotal += monthTotal;
+
+                const wrap = document.createElement('div');
+                wrap.innerHTML = `
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="material-symbols-outlined text-gray-400" style="font-size:20px;">calendar_month</span>
+                            <h4 class="text-base sm:text-lg font-extrabold text-google-dark">${group.month}</h4>
+                        </div>
+                        <span class="text-sm sm:text-base font-black text-gray-900 number-font">${formatCurrency(monthTotal)}</span>
+                    </div>
+                    <div class="rounded-2xl border border-gray-100 overflow-hidden">
+                        ${group.items.map((i, idx) => `
+                            <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 ${idx !== group.items.length - 1 ? 'border-b border-gray-50' : ''} hover:bg-[#F8F9FA] transition-colors">
+                                <span class="text-sm font-semibold text-gray-700 truncate">${i.category}</span>
+                                <span class="text-sm font-bold text-gray-900 number-font whitespace-nowrap shrink-0">${formatCurrency(i.cost)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                body.appendChild(wrap);
+            });
+
+            animateCount(document.getElementById('schedule-total'), grandTotal, v => formatCurrency(Math.round(v)));
+        };
+        renderSchedule();
+
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = parsedData.filter(row => 
@@ -734,17 +883,25 @@
             resizeTimer = setTimeout(applyResponsiveCharts, 150);
         });
 
-        // Tabs: switch between Vendor Breakdown and Transaction Details
+        // Tabs: switch between Vendor Breakdown, Transaction Details and Upcoming Schedule
         (function initTabs() {
             const buttons = document.querySelectorAll('.tab-btn');
             const panels = {
                 vendors: document.getElementById('panel-vendors'),
-                transactions: document.getElementById('panel-transactions')
+                transactions: document.getElementById('panel-transactions'),
+                schedule: document.getElementById('panel-schedule')
             };
+            let scheduleShown = false;
 
             const activate = (name) => {
                 buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
                 Object.entries(panels).forEach(([key, el]) => el.classList.toggle('hidden', key !== name));
+                // Re-run the count-up the first time the (initially hidden) schedule opens
+                if (name === 'schedule' && !scheduleShown) {
+                    scheduleShown = true;
+                    const total = scheduleData.reduce((s, g) => s + g.items.reduce((a, i) => a + i.cost, 0), 0);
+                    animateCount(document.getElementById('schedule-total'), total, v => formatCurrency(Math.round(v)));
+                }
             };
 
             buttons.forEach(btn => btn.addEventListener('click', () => activate(btn.dataset.tab)));
