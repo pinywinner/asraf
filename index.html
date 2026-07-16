@@ -233,19 +233,8 @@
                 </div>
             </div>
 
-            <!-- Top Vendors Bar Chart (Span 1 col) -->
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-1 flex flex-col min-h-[320px] sm:min-h-[400px]">
-                <div class="mb-6 sm:mb-8">
-                    <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Top Vendors</h3>
-                    <p class="text-gray-500 text-sm">By cumulative total paid</p>
-                </div>
-                <div class="relative w-full flex-grow">
-                    <canvas id="vendorsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Recent Transactions Table (Span 2 cols) -->
-            <div class="google-editorial-card lg:col-span-2 overflow-hidden flex flex-col">
+            <!-- Recent Transactions Table (full width) -->
+            <div class="google-editorial-card lg:col-span-3 overflow-hidden flex flex-col">
                 <div class="p-5 sm:p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 bg-white z-10">
                     <div>
                         <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Transaction Details</h3>
@@ -695,47 +684,8 @@
             }
         });
 
-        // 3. Top Vendors (Bar)
-        const topVendors = Object.entries(paymentsByVendor).sort((a, b) => b[1] - a[1]).slice(0, 5);
-        const topVendorNames = topVendors.map(v => v[0]);
-
-        const vendorsChart = new Chart(document.getElementById('vendorsChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: topVendorNames.slice(),
-                datasets: [{
-                    data: topVendors.map(v => v[1]),
-                    backgroundColor: '#1F2023',
-                    hoverBackgroundColor: '#4285F4',
-                    borderRadius: 100,
-                    borderSkipped: false,
-                    barThickness: 'flex',
-                    maxBarThickness: 30,
-                    categoryPercentage: 0.75,
-                    barPercentage: 0.9
-                }]
-            },
-            options: {
-                ...commonChartOptions,
-                indexAxis: 'y',
-                scales: {
-                    x: {
-                        grid: { display: false, drawBorder: false },
-                        ticks: {
-                            callback: value => value >= 1000000 ? '₪' + (value / 1000000).toFixed(1) + 'M' : '₪' + (value / 1000).toFixed(0) + 'K',
-                            font: { family: "'Outfit', sans-serif", size: 12 }
-                        }
-                    },
-                    y: {
-                        grid: { display: false, drawBorder: false },
-                        ticks: { font: { family: "'Inter', sans-serif", weight: 'bold', size: 13 } }
-                    }
-                }
-            }
-        });
-
         // Responsive tuning for the charts: shrink fonts, thin out crowded
-        // x-axis labels on the timeline, and truncate long vendor names on mobile.
+        // x-axis labels on the timeline.
         function applyResponsiveCharts() {
             const { isMobile, isSmall } = bp();
             const tickFont = isSmall ? 10 : (isMobile ? 11 : 12);
@@ -747,12 +697,6 @@
             timelineChart.options.scales.x.ticks.maxTicksLimit = isMobile ? 6 : 24;
             timelineChart.options.scales.y.ticks.font.size = tickFont;
             timelineChart.update('none');
-
-            // Vendors
-            vendorsChart.options.scales.y.ticks.font.size = isSmall ? 11 : 13;
-            vendorsChart.options.scales.x.ticks.font.size = tickFont;
-            vendorsChart.data.labels = topVendorNames.map(n => isMobile ? truncateLabel(n, 12) : n);
-            vendorsChart.update('none');
 
             // Scope legend
             scopeChart.options.plugins.legend.labels.font.size = isSmall ? 10 : 12;
