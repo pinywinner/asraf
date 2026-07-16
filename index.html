@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Dashboard - Ashraf Project</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Inter for text, Outfit for numbers, Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+    <style>
+        :root {
+            --google-blue: #4285F4;
+            --google-red: #EA4335;
+            --google-yellow: #FBBC05;
+            --google-green: #34A853;
+            --bg-base: #F4F5F7;
+            --surface-color: #FFFFFF;
+            --border-color: #E6E8EA;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: #1F2023;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .number-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Google Editorial Style Cards */
+        .google-editorial-card {
+            background: var(--surface-color);
+            border-radius: 32px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .google-editorial-card:hover {
+            border-color: #D0D5DD;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .material-icon-style {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Minimalist Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+        /* Soft entrance animation */
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        google: {
+                            blue: '#4285F4', blue_light: '#E8F0FE',
+                            red: '#EA4335', red_light: '#FCE8E6',
+                            green: '#34A853', green_light: '#E6F4EA',
+                            yellow: '#FBBC05', yellow_light: '#FEF7E0',
+                            gray: '#5F6368', dark: '#1F2023'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen p-4 md:p-8 lg:p-12">
+
+    <div class="max-w-[1400px] mx-auto space-y-10">
+        
+        <!-- Header - Editorial Style -->
+        <header class="py-6 md:py-10 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="flex flex-col gap-6 max-w-4xl">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white w-max shadow-sm">
+                    <div class="w-2.5 h-2.5 rounded-full bg-google-blue animate-pulse"></div>
+                    <span class="text-xs font-bold text-gray-800 tracking-wider uppercase">Financial Overview</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-extrabold text-google-dark tracking-tight leading-[1.1]">
+                    Payment Dashboard<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-google-dark">Ashraf Project</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-500 font-normal leading-relaxed max-w-2xl">
+                    Tracking and detailing cash flows, and analyzing expenses with vendors and contractors for the period of Nov 2025 to Jul 2026.
+                </p>
+            </div>
+        </header>
+
+        <!-- KPI Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-in-up" style="animation-delay: 0.2s;">
+            
+            <!-- Total Paid -->
+            <div class="google-editorial-card p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-10">
+                    <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-blue group-hover:text-white transition-colors duration-300">
+                        <span class="material-symbols-outlined material-icon-style">account_balance_wallet</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪9,511,363</h2>
+                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Paid</p>
+                </div>
+            </div>
+
+            <!-- Total Percentage -->
+            <div class="google-editorial-card p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-10">
+                    <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-green group-hover:text-white transition-colors duration-300">
+                        <span class="material-symbols-outlined material-icon-style">donut_large</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">74.90%</h2>
+                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Percentage</p>
+                </div>
+            </div>
+
+            <!-- Total Balance -->
+            <div class="google-editorial-card p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-10">
+                    <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-yellow group-hover:text-white transition-colors duration-300">
+                        <span class="material-symbols-outlined material-icon-style">account_balance</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪3,187,966</h2>
+                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Balance</p>
+                </div>
+            </div>
+
+            <!-- Total Project Estimated -->
+            <div class="google-editorial-card p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-10">
+                    <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-red group-hover:text-white transition-colors duration-300">
+                        <span class="material-symbols-outlined material-icon-style">architecture</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪12,699,329</h2>
+                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Project Estimated</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up" style="animation-delay: 0.3s;">
+            
+            <!-- Main Timeline Chart (Span 2 cols) -->
+            <div class="google-editorial-card p-8 lg:col-span-2 flex flex-col min-h-[400px]">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h3 class="text-2xl font-bold text-google-dark mb-1">Payment Trends</h3>
+                        <p class="text-gray-500 text-sm">Financial volume by month</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="w-3 h-3 rounded-full bg-google-blue mb-1"></span>
+                    </div>
+                </div>
+                <div class="relative w-full flex-grow">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Scope of Work Breakdown (Span 1 col) -->
+            <div class="google-editorial-card p-8 flex flex-col min-h-[400px]">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-google-dark mb-1">Expense Breakdown</h3>
+                    <p class="text-gray-500 text-sm">Distribution by scope of work</p>
+                </div>
+                <div class="relative w-full flex-grow flex items-center justify-center">
+                    <canvas id="scopeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Vendors Bar Chart (Span 1 col) -->
+            <div class="google-editorial-card p-8 lg:col-span-1 flex flex-col min-h-[400px]">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-google-dark mb-1">Top Vendors</h3>
+                    <p class="text-gray-500 text-sm">By cumulative total paid</p>
+                </div>
+                <div class="relative w-full flex-grow">
+                    <canvas id="vendorsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table (Span 2 cols) -->
+            <div class="google-editorial-card lg:col-span-2 overflow-hidden flex flex-col">
+                <div class="p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 bg-white z-10">
+                    <div>
+                        <h3 class="text-2xl font-bold text-google-dark mb-1">Transaction Details</h3>
+                        <p class="text-gray-500 text-sm">Complete vendor transfer list</p>
+                    </div>
+                    
+                    <!-- Search Box styled as a modern pill -->
+                    <div class="relative w-full sm:w-auto">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+                        <input type="text" id="searchInput" placeholder="Search vendor or scope..." 
+                               class="pl-12 pr-6 py-3 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 focus:ring-4 focus:ring-gray-50 transition-all w-full sm:w-72 bg-gray-50 hover:bg-white font-medium text-gray-700">
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar px-2 pb-2">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
+                        <thead class="bg-white sticky top-0 z-10">
+                            <tr>
+                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Date</th>
+                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Vendor / Contractor</th>
+                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Scope of Work</th>
+                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 text-right">Amount (₪)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="bg-white">
+                            <!-- Table rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // Data processing exactly as the original context
+        const rawData = [
+            { date: "13/11/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪590,000.00" },
+            { date: "13/11/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪118,000.00" },
+            { date: "18/11/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪118,000.00" },
+            { date: "20/11/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪118,000.00" },
+            { date: "08/12/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪159,300.00" },
+            { date: "10/12/2025", vendor: "Batya Amit", scope: "Floor Marble", paid: "₪299,855.00" },
+            { date: "15/12/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪159,300.00" },
+            { date: "18/12/2025", vendor: "Naftali Pearl A/C", scope: "Air Conditioning", paid: "₪119,722.80" },
+            { date: "24/12/2025", vendor: "Inside Ceramics", scope: "Ceramics", paid: "₪180,000.00" },
+            { date: "25/12/2025", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪118,000.00" },
+            { date: "15/12/2025", vendor: "Via Communication", scope: "Communication", paid: "₪64,617.00" },
+            { date: "04/01/2026", vendor: "Ariel Biton", scope: "Engineer", paid: "₪10,620.00" },
+            { date: "05/01/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪254,000.00" },
+            { date: "07/01/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪277,000.00" },
+            { date: "07/01/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "21/01/2026", vendor: "Batya Amit", scope: "Floor Marble", paid: "₪299,855.00" },
+            { date: "28/01/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "05/02/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "05/02/2026", vendor: "Hakshourian", scope: "Pocket doors", paid: "₪12,508.00" },
+            { date: "10/02/2026", vendor: "Rechi sheraiber", scope: "Electrical appliances", paid: "₪80,000.00" },
+            { date: "19/02/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪118,000.00" },
+            { date: "25/02/2026", vendor: "Haker", scope: "Windows & Aluminum", paid: "₪350,000.00" },
+            { date: "25/02/2026", vendor: "Inside Ceramics", scope: "Ceramics", paid: "₪295,000.00" },
+            { date: "25/02/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪236,000.00" },
+            { date: "25/02/2026", vendor: "David", scope: "Electronic water heater", paid: "₪37,170.00" },
+            { date: "02/03/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪236,000.00" },
+            { date: "12/03/2026", vendor: "Naftali Pearl A/C", scope: "Air Conditioning", paid: "₪239,445.60" },
+            { date: "12/03/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪354,000.00" },
+            { date: "12/03/2026", vendor: "Ariel Biton", scope: "Engineer", paid: "₪24,780.00" },
+            { date: "05/04/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "05/04/2026", vendor: "Order by Hershy", scope: "tiles For all porches", paid: "₪149,860.00" },
+            { date: "29/04/2026", vendor: "Inside Ceramics", scope: "Swimming pool", paid: "₪385,270.00" },
+            { date: "29/04/2026", vendor: "Naftali Pearl A/C", scope: "Additional", paid: "₪32,273.00" },
+            { date: "29/04/2026", vendor: "Hakshourian", scope: "Doors", paid: "₪91,922.00" },
+            { date: "29/04/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "29/04/2026", vendor: "Shapira lighting", scope: "lights", paid: "₪74,862.00" },
+            { date: "29/04/2026", vendor: "Sinai paint", scope: "paint", paid: "₪41,542.00" },
+            { date: "10/05/2026", vendor: "Shkedi Kitchens", scope: "Kitchens", paid: "₪208,875.00" },
+            { date: "17/05/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
+            { date: "17/05/2026", vendor: "Yehuda Marble", scope: "Stairs", paid: "₪166,521.00" },
+            { date: "19/05/2026", vendor: "Hershy Klein", scope: "Additional Works", paid: "₪29,500.00" },
+            { date: "09/07/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
+            { date: "09/06/2026", vendor: "Best Decor", scope: "Moldings", paid: "₪16,902.00" },
+            { date: "14/06/2026", vendor: "Inside Ceramics", scope: "Ceramics", paid: "₪274,646.00" },
+            { date: "14/06/2026", vendor: "Yossi Beds", scope: "Beds", paid: "₪150,000.00" },
+            { date: "14/06/2026", vendor: "Naftali Pearl A/C", scope: "Additional Works", paid: "₪15,269.20" },
+            { date: "22/06/2026", vendor: "Yehuda Marble", scope: "All kitchens", paid: "₪372,994.30" },
+            { date: "30/06/2026", vendor: "Benny Furniture", scope: "Furniture's", paid: "₪62,000.00" },
+            { date: "30/06/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪177,000.00" },
+            { date: "07/07/2026", vendor: "Shkedi Kitchens", scope: "Kitchens", paid: "₪786,332.00" },
+            { date: "07/07/2026", vendor: "Vlook curtains", scope: "Curtains", paid: "₪97,521.00" },
+            { date: "07/07/2026", vendor: "Kalia sofas", scope: "sofas", paid: "₪33,900.00" }
+        ];
+
+        const cleanNumber = (str) => {
+            if (!str) return 0;
+            return parseFloat(str.toString().replace(/[₪,]/g, ''));
+        };
+
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('en-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(num);
+        };
+
+        const parsedData = rawData.map(item => {
+            if(!item.date) return null;
+            const [day, month, year] = item.date.split('/');
+            const dateObj = new Date(year, month - 1, day);
+            const scopeVal = item.scope.trim() === '' ? 'General' : item.scope.trim();
+            return {
+                ...item, scope: scopeVal, paidNum: cleanNumber(item.paid),
+                dateObj: dateObj, monthKey: `${year}-${month}`
+            };
+        }).filter(item => item !== null && item.paidNum > 0).sort((a, b) => a.dateObj - b.dateObj);
+
+        // Calculate Data for Charts
+        const paymentsByMonth = {};
+        const paymentsByVendor = {};
+        const paymentsByScope = {};
+
+        parsedData.forEach(row => {
+            if (!paymentsByMonth[row.monthKey]) paymentsByMonth[row.monthKey] = 0;
+            paymentsByMonth[row.monthKey] += row.paidNum;
+            if (!paymentsByVendor[row.vendor]) paymentsByVendor[row.vendor] = 0;
+            paymentsByVendor[row.vendor] += row.paidNum;
+            const scope = row.scope;
+            if (!paymentsByScope[scope]) paymentsByScope[scope] = 0;
+            paymentsByScope[scope] += row.paidNum;
+        });
+
+        const getVendorColor = (name) => {
+            const colors = ['bg-[#E8F0FE] text-[#1A73E8]', 'bg-[#FCE8E6] text-[#D93025]', 'bg-[#E6F4EA] text-[#1E8E3E]', 'bg-[#FEF7E0] text-[#F29900]', 'bg-[#F3E8FD] text-[#9334E6]'];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            return colors[Math.abs(hash) % colors.length];
+        };
+
+        const renderTable = (data) => {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            const displayData = [...data].sort((a, b) => b.dateObj - a.dateObj);
+            
+            displayData.forEach(row => {
+                const vendorStyle = getVendorColor(row.vendor);
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-[#F8F9FA] transition-colors border-b border-gray-50 last:border-0';
+                tr.innerHTML = `
+                    <td class="py-5 px-8 text-sm text-gray-500 number-font whitespace-nowrap font-medium">${row.date}</td>
+                    <td class="py-5 px-8 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full ${vendorStyle} flex items-center justify-center text-sm font-bold uppercase shrink-0">
+                            ${row.vendor.charAt(0)}
+                        </div>
+                        <span class="text-sm font-bold text-gray-900 truncate max-w-[200px]" title="${row.vendor}">${row.vendor}</span>
+                    </td>
+                    <td class="py-5 px-8">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                            ${row.scope}
+                        </span>
+                    </td>
+                    <td class="py-5 px-8 text-base font-black text-gray-900 number-font text-right">
+                        ${formatCurrency(row.paidNum)}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+        renderTable(parsedData);
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = parsedData.filter(row => 
+                row.vendor.toLowerCase().includes(term) || row.scope.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        });
+
+        Chart.defaults.font.family = "'Outfit', 'Inter', sans-serif";
+        Chart.defaults.color = '#5f6368';
+        Chart.defaults.rtl = false;
+        
+        const brandColors = ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#202124', '#8AB4F8', '#FDE293'];
+
+        const commonChartOptions = {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1F2023', titleColor: '#fff', bodyColor: '#fff',
+                    padding: 16, cornerRadius: 12, displayColors: false,
+                    titleFont: { size: 14, family: "'Inter', sans-serif" },
+                    bodyFont: { size: 16, family: "'Outfit', sans-serif", weight: 'bold' }
+                }
+            }
+        };
+
+        // 1. Timeline Chart
+        const monthLabels = Object.keys(paymentsByMonth).sort();
+        const monthLabelsEnglish = monthLabels.map(m => {
+            const [y, mo] = m.split('-');
+            const date = new Date(y, parseInt(mo)-1, 1);
+            return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+        });
+        const monthData = monthLabels.map(m => paymentsByMonth[m]);
+
+        new Chart(document.getElementById('timelineChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: monthLabelsEnglish,
+                datasets: [{
+                    data: monthData,
+                    borderColor: '#4285F4',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#4285F4',
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                scales: {
+                    x: { grid: { display: false, drawBorder: false }, ticks: { font: { weight: 'bold' } } },
+                    y: {
+                        border: { display: false },
+                        grid: { color: '#E6E8EA', borderDash: [5, 5] },
+                        ticks: {
+                            callback: value => '₪' + (value / 1000000).toFixed(1) + 'M',
+                            font: { family: "'Outfit', sans-serif", weight: '500' }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Scope of Work (Doughnut)
+        const scopesSorted = Object.entries(paymentsByScope).sort((a, b) => b[1] - a[1]);
+        const topScopes = scopesSorted.slice(0, 5);
+        const otherScopesVal = scopesSorted.slice(5).reduce((sum, val) => sum + val[1], 0);
+        if (otherScopesVal > 0) topScopes.push(['Other', otherScopesVal]);
+
+        new Chart(document.getElementById('scopeChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: topScopes.map(s => s[0]),
+                datasets: [{
+                    data: topScopes.map(s => s[1]),
+                    backgroundColor: brandColors,
+                    borderWidth: 4,
+                    borderColor: '#ffffff',
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                cutout: '70%',
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    legend: {
+                        display: true, position: 'bottom',
+                        labels: { usePointStyle: true, padding: 20, font: { family: "'Inter', sans-serif", weight: 'bold' } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) { return formatCurrency(context.raw); }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 3. Top Vendors (Bar)
+        const topVendors = Object.entries(paymentsByVendor).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+        new Chart(document.getElementById('vendorsChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: topVendors.map(v => v[0]),
+                datasets: [{
+                    data: topVendors.map(v => v[1]),
+                    backgroundColor: '#1F2023',
+                    hoverBackgroundColor: '#4285F4',
+                    borderRadius: 100,
+                    borderSkipped: false,
+                    barThickness: 24
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: {
+                            callback: value => value >= 1000000 ? '₪' + (value / 1000000).toFixed(1) + 'M' : '₪' + (value / 1000).toFixed(0) + 'K',
+                            font: { family: "'Outfit', sans-serif" }
+                        }
+                    },
+                    y: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: { family: "'Inter', sans-serif", weight: 'bold', size: 13 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
