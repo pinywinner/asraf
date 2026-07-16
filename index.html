@@ -58,6 +58,29 @@
 
         .number-font {
             font-family: 'Outfit', sans-serif;
+            /* Keep amounts left-to-right so ₪ stays on the left under RTL auto-translation */
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+
+        /* Vendor list: flat rows when collapsed; a single unified card when expanded */
+        .vendor-wrapper { border-bottom: 1px solid #F3F4F6; }
+        .vendor-wrapper:last-child { border-bottom: 0; }
+        .vendor-wrapper.open {
+            border: 1px solid #E6E8EA;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 12px 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04),
+                        inset 3px 0 0 var(--vendor-accent, #4285F4);
+        }
+        .vendor-wrapper.open .vendor-summary {
+            background: #F7F8FA;
+            border-radius: 0;
+        }
+        .vendor-wrapper.open .vendor-detail {
+            border-top: 1px solid #EDEEF0;
+            background: #FFFFFF;
         }
 
         /* Google Editorial Style Cards */
@@ -192,7 +215,7 @@
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
                 <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700">
-                        <span class="material-symbols-outlined material-icon-style">account_balance_wallet</span>
+                        <span translate="no" class="notranslate material-symbols-outlined material-icon-style">account_balance_wallet</span>
                     </div>
                 </div>
                 <div>
@@ -205,7 +228,7 @@
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
                 <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700">
-                        <span class="material-symbols-outlined material-icon-style">donut_large</span>
+                        <span translate="no" class="notranslate material-symbols-outlined material-icon-style">donut_large</span>
                     </div>
                 </div>
                 <div>
@@ -218,7 +241,7 @@
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
                 <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700">
-                        <span class="material-symbols-outlined material-icon-style">account_balance</span>
+                        <span translate="no" class="notranslate material-symbols-outlined material-icon-style">account_balance</span>
                     </div>
                 </div>
                 <div>
@@ -233,7 +256,7 @@
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
                 <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700">
-                        <span class="material-symbols-outlined material-icon-style">architecture</span>
+                        <span translate="no" class="notranslate material-symbols-outlined material-icon-style">architecture</span>
                     </div>
                 </div>
                 <div>
@@ -280,17 +303,17 @@
             <div class="inline-flex items-center gap-1 p-1.5 rounded-full bg-gray-100 border border-gray-200 w-max">
                 <button type="button" data-tab="vendors" aria-label="Vendor Breakdown"
                         class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
-                    <span class="material-symbols-outlined" style="font-size:18px;">groups</span>
+                    <span translate="no" class="notranslate material-symbols-outlined" style="font-size:18px;">groups</span>
                     <span class="tab-label">Vendor Breakdown</span>
                 </button>
                 <button type="button" data-tab="transactions" aria-label="Transaction Details"
                         class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
-                    <span class="material-symbols-outlined" style="font-size:18px;">receipt_long</span>
+                    <span translate="no" class="notranslate material-symbols-outlined" style="font-size:18px;">receipt_long</span>
                     <span class="tab-label">Transaction Details</span>
                 </button>
                 <button type="button" data-tab="schedule" aria-label="Upcoming Schedule"
                         class="tab-btn flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap">
-                    <span class="material-symbols-outlined" style="font-size:18px;">event_upcoming</span>
+                    <span translate="no" class="notranslate material-symbols-outlined" style="font-size:18px;">event_upcoming</span>
                     <span class="tab-label">Upcoming Schedule</span>
                 </button>
             </div>
@@ -334,7 +357,7 @@
 
                         <!-- Search Box styled as a modern pill -->
                         <div class="relative w-full sm:w-auto">
-                            <span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+                            <span translate="no" class="notranslate material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
                             <input type="text" id="searchInput" placeholder="Search vendor or scope..."
                                    class="pl-12 pr-6 py-3 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 focus:ring-4 focus:ring-gray-50 transition-all w-full sm:w-72 bg-gray-50 hover:bg-white font-medium text-gray-700">
                         </div>
@@ -637,7 +660,7 @@
 
                 const statusHtml = settled
                     ? `<span class="inline-flex items-center gap-1 text-google-green font-bold">
-                           <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Fully paid
+                           <span translate="no" class="notranslate material-symbols-outlined" style="font-size:16px;">check_circle</span> Fully paid
                        </span>`
                     : `<span class="text-gray-500 font-medium">Remaining <span class="number-font font-bold text-gray-700">${formatCurrency(v.balance)}</span></span>`;
 
@@ -647,10 +670,11 @@
                     .sort((a, b) => a.dateObj - b.dateObj);
 
                 const wrapper = document.createElement('div');
-                wrapper.className = 'border-b border-gray-50 last:border-0';
+                wrapper.className = 'vendor-wrapper';
+                wrapper.style.setProperty('--vendor-accent', barColor);
 
                 const row = document.createElement('div');
-                row.className = 'flex flex-col gap-2.5 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-center px-4 py-4 sm:px-3 hover:bg-[#F8F9FA] transition-colors rounded-xl cursor-pointer select-none';
+                row.className = 'vendor-summary flex flex-col gap-2.5 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-center px-4 py-4 sm:px-3 hover:bg-[#F8F9FA] transition-colors rounded-xl cursor-pointer select-none';
                 row.setAttribute('role', 'button');
                 row.setAttribute('tabindex', '0');
                 row.setAttribute('aria-expanded', 'false');
@@ -665,7 +689,7 @@
                             <p class="text-sm font-bold text-gray-900 truncate" title="${v.name}">${v.name}</p>
                             <p class="text-xs text-gray-400 truncate">${v.category}</p>
                         </div>
-                        <span class="material-symbols-outlined vendor-chevron text-gray-300 transition-transform duration-300 shrink-0 sm:hidden" style="font-size:22px;">expand_more</span>
+                        <span translate="no" class="notranslate material-symbols-outlined vendor-chevron text-gray-300 transition-transform duration-300 shrink-0 sm:hidden" style="font-size:22px;">expand_more</span>
                     </div>
 
                     <!-- Amount (mobile only, left-grouped so it never stretches to the edge) -->
@@ -691,17 +715,17 @@
                             <span class="text-xl font-black text-gray-900 number-font whitespace-nowrap shrink-0">${formatCurrency(v.paid)}</span>
                             <span class="text-xs text-gray-400 number-font truncate">of ${formatCurrency(v.budget)}</span>
                         </div>
-                        <span class="material-symbols-outlined vendor-chevron text-gray-400 transition-transform duration-300 shrink-0" style="font-size:22px;">expand_more</span>
+                        <span translate="no" class="notranslate material-symbols-outlined vendor-chevron text-gray-400 transition-transform duration-300 shrink-0" style="font-size:22px;">expand_more</span>
                     </div>
                 `;
 
-                // Expandable transfer list
+                // Expandable transfer list — attaches directly under the summary
                 const details = document.createElement('div');
-                details.className = 'vendor-detail hidden px-4 pb-4 sm:px-2';
+                details.className = 'vendor-detail hidden';
                 details.innerHTML = `
-                    <div class="rounded-2xl border border-gray-100 overflow-hidden">
+                    <div>
                         ${txs.map((t, i) => `
-                            <div class="flex items-center justify-between gap-2 px-4 sm:px-5 py-3 bg-white ${i !== txs.length - 1 ? 'border-b border-gray-50' : ''}">
+                            <div class="flex items-center justify-between gap-2 px-4 sm:px-5 py-3 ${i !== txs.length - 1 ? 'border-b border-gray-50' : ''}">
                                 <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                                     <span class="text-xs text-gray-400 number-font font-medium whitespace-nowrap shrink-0">${t.date}</span>
                                     <span class="truncate min-w-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">${t.scope}</span>
@@ -722,11 +746,13 @@
                     const willOpen = details.classList.contains('hidden');
                     // Accordion: collapse every vendor first
                     container.querySelectorAll('.vendor-detail').forEach(d => d.classList.add('hidden'));
+                    container.querySelectorAll('.vendor-wrapper').forEach(w => w.classList.remove('open'));
                     container.querySelectorAll('[aria-expanded]').forEach(r => r.setAttribute('aria-expanded', 'false'));
                     container.querySelectorAll('.vendor-chevron').forEach(c => c.style.transform = '');
                     // Open the clicked one only if it was closed
                     if (willOpen) {
                         details.classList.remove('hidden');
+                        wrapper.classList.add('open');
                         row.setAttribute('aria-expanded', 'true');
                         row.querySelectorAll('.vendor-chevron').forEach(c => c.style.transform = 'rotate(180deg)');
                     }
@@ -782,7 +808,7 @@
                 wrap.innerHTML = `
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2.5">
-                            <span class="material-symbols-outlined text-gray-400" style="font-size:20px;">calendar_month</span>
+                            <span translate="no" class="notranslate material-symbols-outlined text-gray-400" style="font-size:20px;">calendar_month</span>
                             <h4 class="text-base sm:text-lg font-extrabold text-google-dark">${group.month}</h4>
                         </div>
                         <span class="text-sm sm:text-base font-black text-gray-900 number-font">${formatCurrency(monthTotal)}</span>
@@ -975,6 +1001,22 @@
 
             // Default tab
             activate('vendors');
+        })();
+
+        // Auto-translation guard: keep Material Symbols icons as icons (not translated
+        // ligature words) and keep numeric values intact and left-to-right.
+        (function protectFromTranslation() {
+            const mark = root => (root || document).querySelectorAll('.material-symbols-outlined, .number-font')
+                .forEach(el => { el.setAttribute('translate', 'no'); el.classList.add('notranslate'); });
+            mark();
+            // Re-apply for content rendered after search filtering, etc.
+            if (typeof MutationObserver !== 'undefined') {
+                const tb = document.getElementById('table-body');
+                const mc = document.getElementById('mobile-cards');
+                const obs = new MutationObserver(() => mark());
+                if (tb) obs.observe(tb, { childList: true });
+                if (mc) obs.observe(mc, { childList: true });
+            }
         })();
     </script>
 </body>
