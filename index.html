@@ -265,6 +265,33 @@
             </div>
             
         </div>
+
+        <!-- Vendor Breakdown Section -->
+        <div class="fade-in-up" style="animation-delay: 0.4s;">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Vendor Breakdown</h3>
+                        <p class="text-gray-500 text-sm">How much each supplier received, versus their budget</p>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <p class="text-2xl sm:text-3xl font-black text-google-dark number-font leading-none" id="vendor-count">0</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-1">Active Vendors</p>
+                    </div>
+                </div>
+
+                <!-- Column header (desktop only) -->
+                <div class="hidden sm:grid grid-cols-12 gap-4 px-2 pb-3 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    <div class="col-span-4">Vendor / Supplier</div>
+                    <div class="col-span-5">Progress vs Budget</div>
+                    <div class="col-span-3 text-right">Total Received</div>
+                </div>
+
+                <div id="vendor-breakdown" class="flex flex-col">
+                    <!-- Vendor rows injected via JS -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -311,7 +338,7 @@
             { date: "17/05/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
             { date: "17/05/2026", vendor: "Yehuda Marble", scope: "Stairs", paid: "₪166,521.00" },
             { date: "19/05/2026", vendor: "Hershy Klein", scope: "Additional Works", paid: "₪29,500.00" },
-            { date: "09/07/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
+            { date: "09/06/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
             { date: "09/06/2026", vendor: "Best Decor", scope: "Moldings", paid: "₪16,902.00" },
             { date: "14/06/2026", vendor: "Inside Ceramics", scope: "Ceramics", paid: "₪274,646.00" },
             { date: "14/06/2026", vendor: "Yossi Beds", scope: "Beds", paid: "₪150,000.00" },
@@ -365,7 +392,7 @@
         });
 
         // Calculate and Update KPIs Dynamically
-        const totalProjectEstimated = 12699329;
+        const totalProjectEstimated = 12699328.5;
         const totalBalance = totalProjectEstimated - totalPaid;
         const totalPercentage = ((totalPaid / totalProjectEstimated) * 100).toFixed(2);
 
@@ -443,6 +470,96 @@
             });
         };
         renderTable(parsedData);
+
+        // Per-vendor budget & category (sourced from the Excel "Dashboard" sheet)
+        const vendorInfo = {
+            "Hershy Klein":      { budget: 5156600,   category: "Construction Works" },
+            "Batya Amit":        { budget: 599624.08, category: "Floor Marble" },
+            "Naftali Pearl A/C": { budget: 431349,    category: "Air Conditioning" },
+            "Inside Ceramics":   { budget: 822793,    category: "Ceramics" },
+            "Via Communication": { budget: 223675,    category: "Communication" },
+            "Ariel Biton":       { budget: 35400,     category: "Engineer" },
+            "Hakshourian":       { budget: 12508,     category: "Pocket doors" },
+            "Rechi sheraiber":   { budget: 80000,     category: "Electrical appliances" },
+            "Haker":             { budget: 615285,    category: "Windows & Aluminum" },
+            "David":             { budget: 37170,     category: "Electronic water heater" },
+            "Order by Hershy":   { budget: 149860,    category: "Tiles for all porches" },
+            "Shapira lighting":  { budget: 74862,     category: "Lights" },
+            "Sinai paint":       { budget: 41542,     category: "Paint" },
+            "Shkedi Kitchens":   { budget: 995207,    category: "Kitchens" },
+            "Yehuda Marble":     { budget: 539515.3,  category: "Stairs & Marble" },
+            "Best Decor":        { budget: 16902,     category: "Moldings" },
+            "Yossi Beds":        { budget: 225000,    category: "Beds" },
+            "Benny Furniture":   { budget: 124100,    category: "Furniture" },
+            "Vlook curtains":    { budget: 97521,     category: "Curtains" },
+            "Kalia sofas":       { budget: 67800,     category: "Sofas" }
+        };
+
+        const renderVendors = () => {
+            const container = document.getElementById('vendor-breakdown');
+            container.innerHTML = '';
+
+            // Build list from actual payments, so it always matches the transactions
+            const vendors = Object.entries(paymentsByVendor)
+                .map(([name, paid]) => {
+                    const info = vendorInfo[name] || {};
+                    const budget = info.budget || paid;
+                    const balance = budget - paid;
+                    const pct = budget > 0 ? (paid / budget) * 100 : 100;
+                    return { name, paid, budget, balance, pct, category: info.category || 'General' };
+                })
+                .sort((a, b) => b.paid - a.paid);
+
+            document.getElementById('vendor-count').innerText = vendors.length;
+
+            vendors.forEach(v => {
+                const vendorStyle = getVendorColor(v.name);
+                const barWidth = Math.min(v.pct, 100);
+                const settled = v.balance <= 1;                     // fully paid (or overpaid)
+                const barColor = settled ? '#34A853' : '#4285F4';   // green when settled, blue when outstanding
+
+                const statusHtml = settled
+                    ? `<span class="inline-flex items-center gap-1 text-google-green font-bold">
+                           <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Fully paid
+                       </span>`
+                    : `<span class="text-gray-500 font-medium">Remaining <span class="number-font font-bold text-gray-700">${formatCurrency(v.balance)}</span></span>`;
+
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 py-4 sm:px-2 items-center border-b border-gray-50 last:border-0 hover:bg-[#F8F9FA] transition-colors rounded-xl';
+                row.innerHTML = `
+                    <!-- Identity -->
+                    <div class="sm:col-span-4 flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-full ${vendorStyle} flex items-center justify-center text-sm font-bold uppercase shrink-0">
+                            ${v.name.charAt(0)}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-gray-900 truncate" title="${v.name}">${v.name}</p>
+                            <p class="text-xs text-gray-400 truncate">${v.category}</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress vs budget -->
+                    <div class="sm:col-span-5">
+                        <div class="flex justify-between items-center text-xs mb-1.5">
+                            ${statusHtml}
+                            <span class="number-font font-bold text-gray-500">${v.pct.toFixed(0)}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all" style="width:${barWidth}%; background:${barColor};"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1.5">Budget <span class="number-font">${formatCurrency(v.budget)}</span></p>
+                    </div>
+
+                    <!-- Total received -->
+                    <div class="sm:col-span-3 flex sm:block justify-between items-baseline sm:text-right pt-2 sm:pt-0 border-t sm:border-0 border-gray-50">
+                        <span class="sm:hidden text-xs font-semibold text-gray-400 uppercase tracking-wide">Total received</span>
+                        <span class="text-lg sm:text-xl font-black text-gray-900 number-font">${formatCurrency(v.paid)}</span>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        };
+        renderVendors();
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
