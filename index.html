@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Dashboard - Ashraf Project</title>
+    <title>Payment Dashboard - Asraf Project</title>
+
+    <!-- ============================================================= -->
+    <!-- Link preview (WhatsApp / Telegram / Facebook / iMessage ...)  -->
+    <!-- IMPORTANT: replace the base URL below with your real page URL -->
+    <!-- and upload og-image.png to the same folder in your repo.      -->
+    <!-- ============================================================= -->
+    <meta name="description" content="Vendor payments & cash flow tracking for the Asraf Project · Nov 2025 – Jul 2026.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pinywinner.github.io/asraf/">
+    <meta property="og:title" content="Payment Dashboard — Asraf Project">
+    <meta property="og:description" content="Vendor payments & cash flow · Nov 2025 – Jul 2026. ₪9.5M paid of ₪12.7M (74.9%).">
+    <meta property="og:image" content="https://pinywinner.github.io/asraf/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Asraf Project">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Payment Dashboard — Asraf Project">
+    <meta name="twitter:description" content="Vendor payments & cash flow · Nov 2025 – Jul 2026. ₪9.5M paid of ₪12.7M (74.9%).">
+    <meta name="twitter:image" content="https://pinywinner.github.io/asraf/og-image.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +33,7 @@
     <!-- Google Fonts: Inter for text, Outfit for numbers, Material Symbols -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
     <style>
@@ -119,7 +138,7 @@
                 
                 <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-google-dark tracking-tight leading-[1.1]">
                     Payment Dashboard<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-google-dark">Ashraf Project</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-google-dark">Asraf Project</span>
                 </h1>
                 
                 <p class="text-lg sm:text-xl md:text-2xl text-gray-500 font-normal leading-relaxed max-w-2xl">
@@ -132,66 +151,66 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.2s;">
             
             <!-- Total Paid -->
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
+                <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-blue group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">account_balance_wallet</span>
                     </div>
                 </div>
                 <div>
                     <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-total-paid">₪0</h2>
-                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Paid</p>
+                    <p class="text-sm font-bold text-gray-500 tracking-wide uppercase">Total Paid</p>
                 </div>
             </div>
 
             <!-- Total Percentage -->
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
+                <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-green group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">donut_large</span>
                     </div>
                 </div>
                 <div>
                     <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-percentage">0%</h2>
-                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Percentage</p>
+                    <p class="text-sm font-bold text-gray-500 tracking-wide uppercase">Total Percentage</p>
                 </div>
             </div>
 
             <!-- Total Balance -->
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
+                <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-yellow group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">account_balance</span>
                     </div>
                 </div>
                 <div>
                     <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-balance">₪0</h2>
-                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Balance</p>
+                    <p class="text-sm font-bold text-gray-500 tracking-wide uppercase">Total Balance</p>
                 </div>
             </div>
 
             <!-- Total Project Estimated -->
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-row sm:flex-col items-center sm:items-stretch justify-start sm:justify-between gap-4 sm:gap-0 group">
+                <div class="flex justify-between items-center mb-0 sm:mb-8 lg:mb-10 shrink-0">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-red group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">architecture</span>
                     </div>
                 </div>
                 <div>
                     <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-estimated">₪0</h2>
-                    <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Project Estimated</p>
+                    <p class="text-sm font-bold text-gray-500 tracking-wide uppercase">Total Project Estimated</p>
                 </div>
             </div>
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.3s;">
+        <div class="grid grid-cols-1 lg:grid-cols-3 lg:items-start gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.3s;">
             
             <!-- Main Timeline Chart (Span 2 cols) -->
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-2 flex flex-col min-h-[320px] sm:min-h-[400px]">
                 <div class="flex justify-between items-end mb-6 sm:mb-8">
                     <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Payment Trends</h3>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Payment Trends</h3>
                         <p class="text-gray-500 text-sm">Financial volume by month</p>
                     </div>
                     <div class="flex gap-2">
@@ -206,7 +225,7 @@
             <!-- Scope of Work Breakdown (Span 1 col) -->
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col min-h-[320px] sm:min-h-[400px]">
                 <div class="mb-6 sm:mb-8">
-                    <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Expense Breakdown</h3>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Expense Breakdown</h3>
                     <p class="text-gray-500 text-sm">Distribution by scope of work</p>
                 </div>
                 <div class="relative w-full flex-grow flex items-center justify-center">
@@ -217,7 +236,7 @@
             <!-- Top Vendors Bar Chart (Span 1 col) -->
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-1 flex flex-col min-h-[320px] sm:min-h-[400px]">
                 <div class="mb-6 sm:mb-8">
-                    <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Top Vendors</h3>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Top Vendors</h3>
                     <p class="text-gray-500 text-sm">By cumulative total paid</p>
                 </div>
                 <div class="relative w-full flex-grow">
@@ -229,7 +248,7 @@
             <div class="google-editorial-card lg:col-span-2 overflow-hidden flex flex-col">
                 <div class="p-5 sm:p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 bg-white z-10">
                     <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Transaction Details</h3>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Transaction Details</h3>
                         <p class="text-gray-500 text-sm">Complete vendor transfer list</p>
                     </div>
                     
@@ -271,7 +290,7 @@
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
                     <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Vendor Breakdown</h3>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Vendor Breakdown</h3>
                         <p class="text-gray-500 text-sm">How much each supplier received, versus their budget</p>
                     </div>
                     <div class="text-left sm:text-right">
@@ -690,7 +709,10 @@
                     hoverBackgroundColor: '#4285F4',
                     borderRadius: 100,
                     borderSkipped: false,
-                    barThickness: 24
+                    barThickness: 'flex',
+                    maxBarThickness: 30,
+                    categoryPercentage: 0.75,
+                    barPercentage: 0.9
                 }]
             },
             options: {
