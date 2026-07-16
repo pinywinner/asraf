@@ -104,6 +104,15 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        /* Segmented-control tabs */
+        .tab-btn { color: #5F6368; }
+        .tab-btn:hover { color: #1F2023; }
+        .tab-btn.active {
+            background: #FFFFFF;
+            color: #1F2023;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
     </style>
     
     <script>
@@ -131,11 +140,6 @@
         <!-- Header - Editorial Style -->
         <header class="py-4 sm:py-6 md:py-10 fade-in-up" style="animation-delay: 0.1s;">
             <div class="flex flex-col gap-4 sm:gap-6 max-w-4xl">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white w-max shadow-sm">
-                    <div class="w-2.5 h-2.5 rounded-full bg-google-blue animate-pulse"></div>
-                    <span class="text-xs font-bold text-gray-800 tracking-wider uppercase">Financial Overview</span>
-                </div>
-                
                 <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-google-dark tracking-tight leading-[1.1]">
                     Payment Dashboard<br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-google-dark">Asraf Project</span>
@@ -204,7 +208,7 @@
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 lg:items-start gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.3s;">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.3s;">
             
             <!-- Main Timeline Chart (Span 2 cols) -->
             <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-2 flex flex-col min-h-[320px] sm:min-h-[400px]">
@@ -212,9 +216,6 @@
                     <div>
                         <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Payment Trends</h3>
                         <p class="text-gray-500 text-sm">Financial volume by month</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <span class="w-3 h-3 rounded-full bg-google-blue mb-1"></span>
                     </div>
                 </div>
                 <div class="relative w-full flex-grow">
@@ -233,72 +234,93 @@
                 </div>
             </div>
 
-            <!-- Recent Transactions Table (full width) -->
-            <div class="google-editorial-card lg:col-span-3 overflow-hidden flex flex-col">
-                <div class="p-5 sm:p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 bg-white z-10">
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Transaction Details</h3>
-                        <p class="text-gray-500 text-sm">Complete vendor transfer list</p>
-                    </div>
-                    
-                    <!-- Search Box styled as a modern pill -->
-                    <div class="relative w-full sm:w-auto">
-                        <span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
-                        <input type="text" id="searchInput" placeholder="Search vendor or scope..." 
-                               class="pl-12 pr-6 py-3 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 focus:ring-4 focus:ring-gray-50 transition-all w-full sm:w-72 bg-gray-50 hover:bg-white font-medium text-gray-700">
-                    </div>
-                </div>
-                
-                <!-- Desktop / tablet: real table (sm and up) -->
-                <div class="hidden sm:block overflow-x-auto custom-scrollbar px-2 pb-2">
-                    <table class="w-full text-left border-collapse min-w-[650px]">
-                        <thead class="bg-white sticky top-0 z-10">
-                            <tr>
-                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Date</th>
-                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Vendor / Contractor</th>
-                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Scope of Work</th>
-                                <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 text-right">Amount (₪)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body" class="bg-white">
-                            <!-- Table rows injected via JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Mobile: stacked cards (below sm) -->
-                <div id="mobile-cards" class="sm:hidden flex flex-col gap-3 px-4 pb-6">
-                    <!-- Cards injected via JS -->
-                </div>
-            </div>
-            
         </div>
 
-        <!-- Vendor Breakdown Section -->
+        <!-- Tabbed Section: Vendor Breakdown / Transaction Details -->
         <div class="fade-in-up" style="animation-delay: 0.4s;">
-            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col">
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Vendor Breakdown</h3>
-                        <p class="text-gray-500 text-sm">How much each supplier received, versus their budget</p>
-                    </div>
-                    <div class="text-left sm:text-right">
-                        <p class="text-2xl sm:text-3xl font-black text-google-dark number-font leading-none" id="vendor-count">0</p>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-1">Active Vendors</p>
-                    </div>
-                </div>
 
-                <!-- Column header (desktop only) -->
-                <div class="hidden sm:grid grid-cols-12 gap-4 px-2 pb-3 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    <div class="col-span-4">Vendor / Supplier</div>
-                    <div class="col-span-5">Progress vs Budget</div>
-                    <div class="col-span-3 text-right">Total Received</div>
-                </div>
+            <!-- Tab bar (segmented control) -->
+            <div class="inline-flex items-center gap-1 p-1.5 rounded-full bg-gray-100 border border-gray-200 mb-4 sm:mb-6">
+                <button type="button" data-tab="vendors"
+                        class="tab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300">
+                    <span class="material-symbols-outlined" style="font-size:18px;">groups</span>
+                    <span>Vendor Breakdown</span>
+                </button>
+                <button type="button" data-tab="transactions"
+                        class="tab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300">
+                    <span class="material-symbols-outlined" style="font-size:18px;">receipt_long</span>
+                    <span>Transaction Details</span>
+                </button>
+            </div>
 
-                <div id="vendor-breakdown" class="flex flex-col">
-                    <!-- Vendor rows injected via JS -->
+            <!-- Panel: Vendor Breakdown -->
+            <div id="panel-vendors" class="tab-panel">
+                <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
+                        <div>
+                            <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Vendor Breakdown</h3>
+                            <p class="text-gray-500 text-sm">How much each supplier received, versus their budget</p>
+                        </div>
+                        <div class="text-left sm:text-right">
+                            <p class="text-2xl sm:text-3xl font-black text-google-dark number-font leading-none" id="vendor-count">0</p>
+                            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-1">Active Vendors</p>
+                        </div>
+                    </div>
+
+                    <!-- Column header (desktop only) -->
+                    <div class="hidden sm:grid grid-cols-12 gap-4 px-2 pb-3 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <div class="col-span-4">Vendor / Supplier</div>
+                        <div class="col-span-5">Progress vs Budget</div>
+                        <div class="col-span-3 text-right">Total Received</div>
+                    </div>
+
+                    <div id="vendor-breakdown" class="flex flex-col">
+                        <!-- Vendor rows injected via JS -->
+                    </div>
                 </div>
             </div>
+
+            <!-- Panel: Transaction Details -->
+            <div id="panel-transactions" class="tab-panel hidden">
+                <div class="google-editorial-card overflow-hidden flex flex-col">
+                    <div class="p-5 sm:p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 bg-white z-10">
+                        <div>
+                            <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Transaction Details</h3>
+                            <p class="text-gray-500 text-sm">Complete vendor transfer list</p>
+                        </div>
+
+                        <!-- Search Box styled as a modern pill -->
+                        <div class="relative w-full sm:w-auto">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+                            <input type="text" id="searchInput" placeholder="Search vendor or scope..."
+                                   class="pl-12 pr-6 py-3 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 focus:ring-4 focus:ring-gray-50 transition-all w-full sm:w-72 bg-gray-50 hover:bg-white font-medium text-gray-700">
+                        </div>
+                    </div>
+
+                    <!-- Desktop / tablet: real table (sm and up) -->
+                    <div class="hidden sm:block overflow-x-auto custom-scrollbar px-2 pb-2">
+                        <table class="w-full text-left border-collapse min-w-[650px]">
+                            <thead class="bg-white sticky top-0 z-10">
+                                <tr>
+                                    <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Date</th>
+                                    <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Vendor / Contractor</th>
+                                    <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">Scope of Work</th>
+                                    <th class="py-4 px-8 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 text-right">Amount (₪)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="bg-white">
+                                <!-- Table rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile: stacked cards (below sm) -->
+                    <div id="mobile-cards" class="sm:hidden flex flex-col gap-3 px-4 pb-6">
+                        <!-- Cards injected via JS -->
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -711,6 +733,25 @@
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(applyResponsiveCharts, 150);
         });
+
+        // Tabs: switch between Vendor Breakdown and Transaction Details
+        (function initTabs() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const panels = {
+                vendors: document.getElementById('panel-vendors'),
+                transactions: document.getElementById('panel-transactions')
+            };
+
+            const activate = (name) => {
+                buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
+                Object.entries(panels).forEach(([key, el]) => el.classList.toggle('hidden', key !== name));
+            };
+
+            buttons.forEach(btn => btn.addEventListener('click', () => activate(btn.dataset.tab)));
+
+            // Default tab
+            activate('vendors');
+        })();
     </script>
 </body>
 </html>
