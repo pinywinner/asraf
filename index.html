@@ -302,7 +302,7 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6 sm:mb-8">
                         <div>
                             <h3 class="text-xl sm:text-2xl font-extrabold text-google-dark mb-1">Vendor Breakdown</h3>
-                            <p class="text-gray-500 text-sm">How much each supplier received, versus their budget</p>
+                            <p class="text-gray-500 text-sm">How much each supplier received, versus their budget &middot; Click a vendor to see all their transfers</p>
                         </div>
                         <div class="text-left sm:text-right">
                             <p class="text-2xl sm:text-3xl font-black text-google-dark number-font leading-none" id="vendor-count">0</p>
@@ -434,7 +434,7 @@
             { date: "17/05/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
             { date: "17/05/2026", vendor: "Yehuda Marble", scope: "Stairs", paid: "₪166,521.00" },
             { date: "19/05/2026", vendor: "Hershy Klein", scope: "Additional Works", paid: "₪29,500.00" },
-            { date: "09/06/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" },
+            { date: "09/06/2026", vendor: "Hershy Klein", scope: "Construction Works", paid: "₪295,000.00" }, // NOTE: the Excel says 09/07/2026 but that's a typo — confirmed by the owner, the payment was made 09/06/2026
             { date: "09/06/2026", vendor: "Best Decor", scope: "Moldings", paid: "₪16,902.00" },
             { date: "14/06/2026", vendor: "Inside Ceramics", scope: "Ceramics", paid: "₪274,646.00" },
             { date: "14/06/2026", vendor: "Yossi Beds", scope: "Beds", paid: "₪150,000.00" },
@@ -583,15 +583,20 @@
         };
         renderTable(parsedData);
 
-        // Per-vendor budget & category (sourced from the Excel "Dashboard" sheet)
+        // Per-vendor TOTAL budget = sum of ALL that vendor's contracts.
+        // Fixed vs the Excel "Dashboard" sheet, which takes only the FIRST
+        // contract's Total Cost per vendor while "Paid" sums everything —
+        // making multi-contract vendors look overpaid. Budgets below match
+        // the running "Balance Due" column in "Payments made" and the
+        // "Monthly schedule" sheet.
         const vendorInfo = {
-            "Hershy Klein":      { budget: 5156600,   category: "Construction Works" },
+            "Hershy Klein":      { budget: 5186100,   category: "Construction + Additional Works" }, // 5,156,600 main + 29,500 additional → ₪649,000 remaining (= Jul 295K + Aug 177K + Sep 177K in schedule)
             "Batya Amit":        { budget: 599624.08, category: "Floor Marble" },
-            "Naftali Pearl A/C": { budget: 431349,    category: "Air Conditioning" },
-            "Inside Ceramics":   { budget: 822793,    category: "Ceramics" },
+            "Naftali Pearl A/C": { budget: 446618.2,  category: "A/C + Additional" },                // 431,349 (incl. 32,273 additional) + 15,269.2 → ₪39,907.6 remaining (= "Naftali Pearl A/C 39,908" in Aug schedule)
+            "Inside Ceramics":   { budget: 1208063,   category: "Ceramics + Swimming Pool" },        // 822,793 ceramics + 385,270 pool (separate, fully-paid contract) → ₪73,147 remaining on ceramics
             "Via Communication": { budget: 223675,    category: "Communication" },
             "Ariel Biton":       { budget: 35400,     category: "Engineer" },
-            "Hakshourian":       { budget: 12508,     category: "Pocket doors" },
+            "Hakshourian":       { budget: 104430,    category: "Pocket Doors + Doors" },            // 12,508 pocket doors + 91,922 doors — two separate contracts, both fully paid
             "Rechi sheraiber":   { budget: 80000,     category: "Electrical appliances" },
             "Haker":             { budget: 615285,    category: "Windows & Aluminum" },
             "David":             { budget: 37170,     category: "Electronic water heater" },
@@ -636,8 +641,20 @@
                        </span>`
                     : `<span class="text-gray-500 font-medium">Remaining <span class="number-font font-bold text-gray-700">${formatCurrency(v.balance)}</span></span>`;
 
+                // All transfers this vendor received, oldest first
+                const txs = parsedData
+                    .filter(t => t.vendor === v.name)
+                    .sort((a, b) => a.dateObj - b.dateObj);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'border-b border-gray-50 last:border-0';
+
                 const row = document.createElement('div');
-                row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 py-4 sm:px-2 items-center border-b border-gray-50 last:border-0 hover:bg-[#F8F9FA] transition-colors rounded-xl';
+                row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 py-4 sm:px-2 items-center hover:bg-[#F8F9FA] transition-colors rounded-xl cursor-pointer select-none';
+                row.setAttribute('role', 'button');
+                row.setAttribute('tabindex', '0');
+                row.setAttribute('aria-expanded', 'false');
+                row.setAttribute('aria-label', `Show all transfers for ${v.name}`);
                 row.innerHTML = `
                     <!-- Identity -->
                     <div class="sm:col-span-4 flex items-center gap-3 min-w-0">
@@ -663,12 +680,48 @@
                     </div>
 
                     <!-- Total received -->
-                    <div class="sm:col-span-3 flex sm:block justify-between items-baseline sm:text-right pt-2 sm:pt-0 border-t sm:border-0 border-gray-50">
+                    <div class="sm:col-span-3 flex sm:flex justify-between sm:justify-end items-center gap-2 pt-2 sm:pt-0 border-t sm:border-0 border-gray-50">
                         <span class="sm:hidden text-xs font-semibold text-gray-400 uppercase tracking-wide">Total received</span>
-                        <span class="text-lg sm:text-xl font-black text-gray-900 number-font">${formatCurrency(v.paid)}</span>
+                        <span class="text-lg sm:text-xl font-black text-gray-900 number-font sm:text-right">${formatCurrency(v.paid)}</span>
+                        <span class="material-symbols-outlined vendor-chevron text-gray-400 transition-transform duration-300 shrink-0" style="font-size:22px;">expand_more</span>
                     </div>
                 `;
-                container.appendChild(row);
+
+                // Expandable transfer list
+                const details = document.createElement('div');
+                details.className = 'hidden pb-4 sm:px-2';
+                details.innerHTML = `
+                    <div class="rounded-2xl border border-gray-100 overflow-hidden">
+                        ${txs.map((t, i) => `
+                            <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 bg-white ${i !== txs.length - 1 ? 'border-b border-gray-50' : ''}">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <span class="text-xs text-gray-400 number-font font-medium whitespace-nowrap w-[76px] shrink-0">${t.date}</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200 truncate">${t.scope}</span>
+                                </div>
+                                <span class="text-sm font-bold text-gray-900 number-font whitespace-nowrap shrink-0">${formatCurrency(t.paidNum, true)}</span>
+                            </div>
+                        `).join('')}
+                        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 bg-gray-50 border-t border-gray-100">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">${txs.length} transfer${txs.length !== 1 ? 's' : ''} &middot; Total</span>
+                            <span class="text-sm font-black text-gray-900 number-font whitespace-nowrap">${formatCurrency(v.paid, true)}</span>
+                        </div>
+                    </div>
+                `;
+
+                const toggle = () => {
+                    const open = details.classList.toggle('hidden') === false;
+                    row.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    const chev = row.querySelector('.vendor-chevron');
+                    if (chev) chev.style.transform = open ? 'rotate(180deg)' : '';
+                };
+                row.addEventListener('click', toggle);
+                row.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+                });
+
+                wrapper.appendChild(row);
+                wrapper.appendChild(details);
+                container.appendChild(wrapper);
             });
         };
         renderVendors();
