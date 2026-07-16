@@ -33,6 +33,8 @@
             background-color: var(--bg-base);
             color: #1F2023;
             -webkit-font-smoothing: antialiased;
+            /* Prevent any accidental horizontal scroll on small screens */
+            overflow-x: hidden;
         }
 
         .number-font {
@@ -50,6 +52,11 @@
         .google-editorial-card:hover {
             border-color: #D0D5DD;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Slightly smaller radius on phones so the card doesn't look oversized */
+        @media (max-width: 640px) {
+            .google-editorial-card { border-radius: 24px; }
         }
 
         .material-icon-style {
@@ -71,6 +78,13 @@
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Keep long KPI numbers on a single line without overflowing */
+        .kpi-number {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
     
     <script>
@@ -91,93 +105,93 @@
         }
     </script>
 </head>
-<body class="min-h-screen p-4 md:p-8 lg:p-12">
+<body class="min-h-screen p-4 sm:p-6 md:p-8 lg:p-12">
 
-    <div class="max-w-[1400px] mx-auto space-y-10">
+    <div class="w-full max-w-screen-2xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
         
         <!-- Header - Editorial Style -->
-        <header class="py-6 md:py-10 fade-in-up" style="animation-delay: 0.1s;">
-            <div class="flex flex-col gap-6 max-w-4xl">
+        <header class="py-4 sm:py-6 md:py-10 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="flex flex-col gap-4 sm:gap-6 max-w-4xl">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white w-max shadow-sm">
                     <div class="w-2.5 h-2.5 rounded-full bg-google-blue animate-pulse"></div>
                     <span class="text-xs font-bold text-gray-800 tracking-wider uppercase">Financial Overview</span>
                 </div>
                 
-                <h1 class="text-5xl md:text-7xl font-extrabold text-google-dark tracking-tight leading-[1.1]">
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-google-dark tracking-tight leading-[1.1]">
                     Payment Dashboard<br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-google-dark">Ashraf Project</span>
                 </h1>
                 
-                <p class="text-xl md:text-2xl text-gray-500 font-normal leading-relaxed max-w-2xl">
+                <p class="text-lg sm:text-xl md:text-2xl text-gray-500 font-normal leading-relaxed max-w-2xl">
                     Tracking and detailing cash flows, and analyzing expenses with vendors and contractors for the period of Nov 2025 to Jul 2026.
                 </p>
             </div>
         </header>
 
         <!-- KPI Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-in-up" style="animation-delay: 0.2s;">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.2s;">
             
             <!-- Total Paid -->
-            <div class="google-editorial-card p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-blue group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">account_balance_wallet</span>
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪9,511,363</h2>
+                    <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-total-paid">₪0</h2>
                     <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Paid</p>
                 </div>
             </div>
 
             <!-- Total Percentage -->
-            <div class="google-editorial-card p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-green group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">donut_large</span>
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">74.90%</h2>
+                    <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-percentage">0%</h2>
                     <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Percentage</p>
                 </div>
             </div>
 
             <!-- Total Balance -->
-            <div class="google-editorial-card p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-yellow group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">account_balance</span>
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪3,187,966</h2>
+                    <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-balance">₪0</h2>
                     <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Balance</p>
                 </div>
             </div>
 
             <!-- Total Project Estimated -->
-            <div class="google-editorial-card p-8 flex flex-col justify-between group">
-                <div class="flex justify-between items-center mb-10">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-center mb-6 sm:mb-8 lg:mb-10">
                     <div class="p-3 bg-gray-50 rounded-[18px] text-gray-700 group-hover:bg-google-red group-hover:text-white transition-colors duration-300">
                         <span class="material-symbols-outlined material-icon-style">architecture</span>
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight">₪12,699,329</h2>
+                    <h2 class="kpi-number text-3xl sm:text-4xl lg:text-5xl font-black text-google-dark number-font mb-2 tracking-tight" id="kpi-estimated">₪0</h2>
                     <p class="text-sm font-semibold text-gray-500 tracking-wide uppercase">Total Project Estimated</p>
                 </div>
             </div>
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up" style="animation-delay: 0.3s;">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.3s;">
             
             <!-- Main Timeline Chart (Span 2 cols) -->
-            <div class="google-editorial-card p-8 lg:col-span-2 flex flex-col min-h-[400px]">
-                <div class="flex justify-between items-end mb-8">
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-2 flex flex-col min-h-[320px] sm:min-h-[400px]">
+                <div class="flex justify-between items-end mb-6 sm:mb-8">
                     <div>
-                        <h3 class="text-2xl font-bold text-google-dark mb-1">Payment Trends</h3>
+                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Payment Trends</h3>
                         <p class="text-gray-500 text-sm">Financial volume by month</p>
                     </div>
                     <div class="flex gap-2">
@@ -190,9 +204,9 @@
             </div>
 
             <!-- Scope of Work Breakdown (Span 1 col) -->
-            <div class="google-editorial-card p-8 flex flex-col min-h-[400px]">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-google-dark mb-1">Expense Breakdown</h3>
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 flex flex-col min-h-[320px] sm:min-h-[400px]">
+                <div class="mb-6 sm:mb-8">
+                    <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Expense Breakdown</h3>
                     <p class="text-gray-500 text-sm">Distribution by scope of work</p>
                 </div>
                 <div class="relative w-full flex-grow flex items-center justify-center">
@@ -201,9 +215,9 @@
             </div>
 
             <!-- Top Vendors Bar Chart (Span 1 col) -->
-            <div class="google-editorial-card p-8 lg:col-span-1 flex flex-col min-h-[400px]">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-google-dark mb-1">Top Vendors</h3>
+            <div class="google-editorial-card p-5 sm:p-6 lg:p-8 lg:col-span-1 flex flex-col min-h-[320px] sm:min-h-[400px]">
+                <div class="mb-6 sm:mb-8">
+                    <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Top Vendors</h3>
                     <p class="text-gray-500 text-sm">By cumulative total paid</p>
                 </div>
                 <div class="relative w-full flex-grow">
@@ -213,9 +227,9 @@
 
             <!-- Recent Transactions Table (Span 2 cols) -->
             <div class="google-editorial-card lg:col-span-2 overflow-hidden flex flex-col">
-                <div class="p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 bg-white z-10">
+                <div class="p-5 sm:p-8 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 bg-white z-10">
                     <div>
-                        <h3 class="text-2xl font-bold text-google-dark mb-1">Transaction Details</h3>
+                        <h3 class="text-xl sm:text-2xl font-bold text-google-dark mb-1">Transaction Details</h3>
                         <p class="text-gray-500 text-sm">Complete vendor transfer list</p>
                     </div>
                     
@@ -227,7 +241,8 @@
                     </div>
                 </div>
                 
-                <div class="overflow-x-auto custom-scrollbar px-2 pb-2">
+                <!-- Desktop / tablet: real table (sm and up) -->
+                <div class="hidden sm:block overflow-x-auto custom-scrollbar px-2 pb-2">
                     <table class="w-full text-left border-collapse min-w-[650px]">
                         <thead class="bg-white sticky top-0 z-10">
                             <tr>
@@ -241,6 +256,11 @@
                             <!-- Table rows injected via JS -->
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile: stacked cards (below sm) -->
+                <div id="mobile-cards" class="sm:hidden flex flex-col gap-3 px-4 pb-6">
+                    <!-- Cards injected via JS -->
                 </div>
             </div>
             
@@ -309,8 +329,11 @@
             return parseFloat(str.toString().replace(/[₪,]/g, ''));
         };
 
-        const formatCurrency = (num) => {
-            return new Intl.NumberFormat('en-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(num);
+        const formatCurrency = (num, showCents = false) => {
+            return '₪' + num.toLocaleString('en-US', {
+                minimumFractionDigits: showCents ? 2 : 0,
+                maximumFractionDigits: showCents ? 2 : 0
+            });
         };
 
         const parsedData = rawData.map(item => {
@@ -325,11 +348,13 @@
         }).filter(item => item !== null && item.paidNum > 0).sort((a, b) => a.dateObj - b.dateObj);
 
         // Calculate Data for Charts
+        let totalPaid = 0;
         const paymentsByMonth = {};
         const paymentsByVendor = {};
         const paymentsByScope = {};
 
         parsedData.forEach(row => {
+            totalPaid += row.paidNum;
             if (!paymentsByMonth[row.monthKey]) paymentsByMonth[row.monthKey] = 0;
             paymentsByMonth[row.monthKey] += row.paidNum;
             if (!paymentsByVendor[row.vendor]) paymentsByVendor[row.vendor] = 0;
@@ -338,6 +363,16 @@
             if (!paymentsByScope[scope]) paymentsByScope[scope] = 0;
             paymentsByScope[scope] += row.paidNum;
         });
+
+        // Calculate and Update KPIs Dynamically
+        const totalProjectEstimated = 12699329;
+        const totalBalance = totalProjectEstimated - totalPaid;
+        const totalPercentage = ((totalPaid / totalProjectEstimated) * 100).toFixed(2);
+
+        document.getElementById('kpi-total-paid').innerText = formatCurrency(Math.round(totalPaid));
+        document.getElementById('kpi-percentage').innerText = totalPercentage + '%';
+        document.getElementById('kpi-balance').innerText = formatCurrency(Math.round(totalBalance));
+        document.getElementById('kpi-estimated').innerText = formatCurrency(totalProjectEstimated);
 
         const getVendorColor = (name) => {
             const colors = ['bg-[#E8F0FE] text-[#1A73E8]', 'bg-[#FCE8E6] text-[#D93025]', 'bg-[#E6F4EA] text-[#1E8E3E]', 'bg-[#FEF7E0] text-[#F29900]', 'bg-[#F3E8FD] text-[#9334E6]'];
@@ -348,11 +383,19 @@
 
         const renderTable = (data) => {
             const tbody = document.getElementById('table-body');
+            const mobile = document.getElementById('mobile-cards');
             tbody.innerHTML = '';
+            mobile.innerHTML = '';
             const displayData = [...data].sort((a, b) => b.dateObj - a.dateObj);
-            
+
+            if (displayData.length === 0) {
+                mobile.innerHTML = '<p class="text-center text-sm text-gray-400 py-8">No matching transactions.</p>';
+            }
+
             displayData.forEach(row => {
                 const vendorStyle = getVendorColor(row.vendor);
+
+                // ----- Desktop / tablet table row -----
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-[#F8F9FA] transition-colors border-b border-gray-50 last:border-0';
                 tr.innerHTML = `
@@ -369,10 +412,34 @@
                         </span>
                     </td>
                     <td class="py-5 px-8 text-base font-black text-gray-900 number-font text-right">
-                        ${formatCurrency(row.paidNum)}
+                        ${formatCurrency(row.paidNum, true)}
                     </td>
                 `;
                 tbody.appendChild(tr);
+
+                // ----- Mobile stacked card -----
+                const card = document.createElement('div');
+                card.className = 'border border-gray-100 rounded-2xl p-4 flex flex-col gap-3';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-full ${vendorStyle} flex items-center justify-center text-sm font-bold uppercase shrink-0">
+                                ${row.vendor.charAt(0)}
+                            </div>
+                            <span class="text-sm font-bold text-gray-900 truncate" title="${row.vendor}">${row.vendor}</span>
+                        </div>
+                        <span class="text-xs text-gray-400 number-font font-medium whitespace-nowrap shrink-0">${row.date}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200 truncate max-w-[55%]">
+                            ${row.scope}
+                        </span>
+                        <span class="text-base font-black text-gray-900 number-font whitespace-nowrap">
+                            ${formatCurrency(row.paidNum, true)}
+                        </span>
+                    </div>
+                `;
+                mobile.appendChild(card);
             });
         };
         renderTable(parsedData);
@@ -404,6 +471,13 @@
             }
         };
 
+        // Helper: current breakpoint info + label truncation
+        const bp = () => {
+            const w = window.innerWidth;
+            return { w, isMobile: w < 640, isSmall: w < 480 };
+        };
+        const truncateLabel = (str, n) => (str.length > n ? str.slice(0, n - 1) + '…' : str);
+
         // 1. Timeline Chart
         const monthLabels = Object.keys(paymentsByMonth).sort();
         const monthLabelsEnglish = monthLabels.map(m => {
@@ -413,7 +487,7 @@
         });
         const monthData = monthLabels.map(m => paymentsByMonth[m]);
 
-        new Chart(document.getElementById('timelineChart').getContext('2d'), {
+        const timelineChart = new Chart(document.getElementById('timelineChart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: monthLabelsEnglish,
@@ -433,13 +507,16 @@
             options: {
                 ...commonChartOptions,
                 scales: {
-                    x: { grid: { display: false, drawBorder: false }, ticks: { font: { weight: 'bold' } } },
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: { weight: 'bold', size: 12 }, autoSkip: true, maxRotation: 0 }
+                    },
                     y: {
                         border: { display: false },
                         grid: { color: '#E6E8EA', borderDash: [5, 5] },
                         ticks: {
                             callback: value => '₪' + (value / 1000000).toFixed(1) + 'M',
-                            font: { family: "'Outfit', sans-serif", weight: '500' }
+                            font: { family: "'Outfit', sans-serif", weight: '500', size: 12 }
                         }
                     }
                 }
@@ -452,7 +529,7 @@
         const otherScopesVal = scopesSorted.slice(5).reduce((sum, val) => sum + val[1], 0);
         if (otherScopesVal > 0) topScopes.push(['Other', otherScopesVal]);
 
-        new Chart(document.getElementById('scopeChart').getContext('2d'), {
+        const scopeChart = new Chart(document.getElementById('scopeChart').getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: topScopes.map(s => s[0]),
@@ -471,7 +548,7 @@
                     ...commonChartOptions.plugins,
                     legend: {
                         display: true, position: 'bottom',
-                        labels: { usePointStyle: true, padding: 20, font: { family: "'Inter', sans-serif", weight: 'bold' } }
+                        labels: { usePointStyle: true, padding: 20, font: { family: "'Inter', sans-serif", weight: 'bold', size: 12 } }
                     },
                     tooltip: {
                         callbacks: {
@@ -484,11 +561,12 @@
 
         // 3. Top Vendors (Bar)
         const topVendors = Object.entries(paymentsByVendor).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const topVendorNames = topVendors.map(v => v[0]);
 
-        new Chart(document.getElementById('vendorsChart').getContext('2d'), {
+        const vendorsChart = new Chart(document.getElementById('vendorsChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: topVendors.map(v => v[0]),
+                labels: topVendorNames.slice(),
                 datasets: [{
                     data: topVendors.map(v => v[1]),
                     backgroundColor: '#1F2023',
@@ -506,7 +584,7 @@
                         grid: { display: false, drawBorder: false },
                         ticks: {
                             callback: value => value >= 1000000 ? '₪' + (value / 1000000).toFixed(1) + 'M' : '₪' + (value / 1000).toFixed(0) + 'K',
-                            font: { family: "'Outfit', sans-serif" }
+                            font: { family: "'Outfit', sans-serif", size: 12 }
                         }
                     },
                     y: {
@@ -515,6 +593,40 @@
                     }
                 }
             }
+        });
+
+        // Responsive tuning for the charts: shrink fonts, thin out crowded
+        // x-axis labels on the timeline, and truncate long vendor names on mobile.
+        function applyResponsiveCharts() {
+            const { isMobile, isSmall } = bp();
+            const tickFont = isSmall ? 10 : (isMobile ? 11 : 12);
+
+            // Timeline
+            timelineChart.options.scales.x.ticks.font.size = tickFont;
+            timelineChart.options.scales.x.ticks.maxRotation = isMobile ? 55 : 0;
+            timelineChart.options.scales.x.ticks.minRotation = isMobile ? 45 : 0;
+            timelineChart.options.scales.x.ticks.maxTicksLimit = isMobile ? 6 : 24;
+            timelineChart.options.scales.y.ticks.font.size = tickFont;
+            timelineChart.update('none');
+
+            // Vendors
+            vendorsChart.options.scales.y.ticks.font.size = isSmall ? 11 : 13;
+            vendorsChart.options.scales.x.ticks.font.size = tickFont;
+            vendorsChart.data.labels = topVendorNames.map(n => isMobile ? truncateLabel(n, 12) : n);
+            vendorsChart.update('none');
+
+            // Scope legend
+            scopeChart.options.plugins.legend.labels.font.size = isSmall ? 10 : 12;
+            scopeChart.options.plugins.legend.labels.padding = isMobile ? 12 : 20;
+            scopeChart.update('none');
+        }
+
+        // Run once on load and again whenever the viewport changes (debounced).
+        applyResponsiveCharts();
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(applyResponsiveCharts, 150);
         });
     </script>
 </body>
