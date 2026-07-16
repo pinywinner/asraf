@@ -28,7 +28,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     
     <!-- Google Fonts: Inter for text, Outfit for numbers, Material Symbols -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -314,7 +314,7 @@
                     <div class="hidden sm:grid grid-cols-12 gap-4 px-2 pb-3 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
                         <div class="col-span-4">Vendor / Supplier</div>
                         <div class="col-span-5">Progress vs Budget</div>
-                        <div class="col-span-3 text-right">Total Received</div>
+                        <div class="col-span-3 text-right">Received / Budget</div>
                     </div>
 
                     <div id="vendor-breakdown" class="flex flex-col">
@@ -650,69 +650,86 @@
                 wrapper.className = 'border-b border-gray-50 last:border-0';
 
                 const row = document.createElement('div');
-                row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 py-4 sm:px-2 items-center hover:bg-[#F8F9FA] transition-colors rounded-xl cursor-pointer select-none';
+                row.className = 'flex flex-col gap-2.5 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-center px-4 py-4 sm:px-3 hover:bg-[#F8F9FA] transition-colors rounded-xl cursor-pointer select-none';
                 row.setAttribute('role', 'button');
                 row.setAttribute('tabindex', '0');
                 row.setAttribute('aria-expanded', 'false');
                 row.setAttribute('aria-label', `Show all transfers for ${v.name}`);
                 row.innerHTML = `
-                    <!-- Identity -->
+                    <!-- Identity (desktop col-4); chevron sits at row end on mobile -->
                     <div class="sm:col-span-4 flex items-center gap-3 min-w-0">
                         <div class="w-10 h-10 rounded-full ${vendorStyle} flex items-center justify-center text-sm font-bold uppercase shrink-0">
                             ${v.name.charAt(0)}
                         </div>
-                        <div class="min-w-0">
+                        <div class="min-w-0 flex-1">
                             <p class="text-sm font-bold text-gray-900 truncate" title="${v.name}">${v.name}</p>
                             <p class="text-xs text-gray-400 truncate">${v.category}</p>
                         </div>
+                        <span class="material-symbols-outlined vendor-chevron text-gray-300 transition-transform duration-300 shrink-0 sm:hidden" style="font-size:22px;">expand_more</span>
                     </div>
 
-                    <!-- Progress vs budget -->
-                    <div class="sm:col-span-5">
-                        <div class="flex justify-between items-center text-xs mb-1.5">
-                            ${statusHtml}
-                            <span class="number-font font-bold text-gray-500">${v.pct.toFixed(0)}%</span>
-                        </div>
-                        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full transition-all" style="width:${barWidth}%; background:${barColor};"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1.5">Budget <span class="number-font">${formatCurrency(v.budget)}</span></p>
+                    <!-- Amount (mobile only, left-grouped so it never stretches to the edge) -->
+                    <div class="flex items-baseline gap-2 min-w-0 sm:hidden">
+                        <span class="text-xl font-black text-gray-900 number-font whitespace-nowrap">${formatCurrency(v.paid)}</span>
+                        <span class="text-xs text-gray-400 number-font truncate">of ${formatCurrency(v.budget)}</span>
                     </div>
 
-                    <!-- Total received -->
-                    <div class="sm:col-span-3 flex sm:flex justify-between sm:justify-end items-center gap-2 pt-2 sm:pt-0 border-t sm:border-0 border-gray-50">
-                        <span class="sm:hidden text-xs font-semibold text-gray-400 uppercase tracking-wide">Total received</span>
-                        <span class="text-lg sm:text-xl font-black text-gray-900 number-font sm:text-right">${formatCurrency(v.paid)}</span>
+                    <!-- Progress (desktop col-5); percent hugs the end of the bar -->
+                    <div class="sm:col-span-5 min-w-0">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1 min-w-0 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all" style="width:${barWidth}%; background:${barColor};"></div>
+                            </div>
+                            <span class="number-font font-bold text-gray-500 text-xs shrink-0">${v.pct.toFixed(0)}%</span>
+                        </div>
+                        <div class="mt-1.5 text-xs">${statusHtml}</div>
+                    </div>
+
+                    <!-- Amount + chevron (desktop only, col-3) -->
+                    <div class="hidden sm:flex sm:col-span-3 items-center justify-end gap-2 min-w-0">
+                        <div class="flex items-baseline gap-1.5 justify-end min-w-0">
+                            <span class="text-xl font-black text-gray-900 number-font whitespace-nowrap shrink-0">${formatCurrency(v.paid)}</span>
+                            <span class="text-xs text-gray-400 number-font truncate">of ${formatCurrency(v.budget)}</span>
+                        </div>
                         <span class="material-symbols-outlined vendor-chevron text-gray-400 transition-transform duration-300 shrink-0" style="font-size:22px;">expand_more</span>
                     </div>
                 `;
 
                 // Expandable transfer list
                 const details = document.createElement('div');
-                details.className = 'hidden pb-4 sm:px-2';
+                details.className = 'vendor-detail hidden px-4 pb-4 sm:px-2';
                 details.innerHTML = `
                     <div class="rounded-2xl border border-gray-100 overflow-hidden">
                         ${txs.map((t, i) => `
-                            <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 bg-white ${i !== txs.length - 1 ? 'border-b border-gray-50' : ''}">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <span class="text-xs text-gray-400 number-font font-medium whitespace-nowrap w-[76px] shrink-0">${t.date}</span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200 truncate">${t.scope}</span>
+                            <div class="flex items-center justify-between gap-2 px-4 sm:px-5 py-3 bg-white ${i !== txs.length - 1 ? 'border-b border-gray-50' : ''}">
+                                <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                    <span class="text-xs text-gray-400 number-font font-medium whitespace-nowrap shrink-0">${t.date}</span>
+                                    <span class="truncate min-w-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">${t.scope}</span>
                                 </div>
-                                <span class="text-sm font-bold text-gray-900 number-font whitespace-nowrap shrink-0">${formatCurrency(t.paidNum, true)}</span>
+                                <span class="text-sm font-bold text-gray-900 number-font whitespace-nowrap shrink-0">
+                                    <span class="sm:hidden">${formatCurrency(t.paidNum)}</span>
+                                    <span class="hidden sm:inline">${formatCurrency(t.paidNum, true)}</span>
+                                </span>
                             </div>
                         `).join('')}
-                        <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 bg-gray-50 border-t border-gray-100">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">${txs.length} transfer${txs.length !== 1 ? 's' : ''} &middot; Total</span>
-                            <span class="text-sm font-black text-gray-900 number-font whitespace-nowrap">${formatCurrency(v.paid, true)}</span>
+                        <div class="px-4 sm:px-5 py-2.5 bg-gray-50 border-t border-gray-100">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">${txs.length} transfer${txs.length !== 1 ? 's' : ''}</span>
                         </div>
                     </div>
                 `;
 
                 const toggle = () => {
-                    const open = details.classList.toggle('hidden') === false;
-                    row.setAttribute('aria-expanded', open ? 'true' : 'false');
-                    const chev = row.querySelector('.vendor-chevron');
-                    if (chev) chev.style.transform = open ? 'rotate(180deg)' : '';
+                    const willOpen = details.classList.contains('hidden');
+                    // Accordion: collapse every vendor first
+                    container.querySelectorAll('.vendor-detail').forEach(d => d.classList.add('hidden'));
+                    container.querySelectorAll('[aria-expanded]').forEach(r => r.setAttribute('aria-expanded', 'false'));
+                    container.querySelectorAll('.vendor-chevron').forEach(c => c.style.transform = '');
+                    // Open the clicked one only if it was closed
+                    if (willOpen) {
+                        details.classList.remove('hidden');
+                        row.setAttribute('aria-expanded', 'true');
+                        row.querySelectorAll('.vendor-chevron').forEach(c => c.style.transform = 'rotate(180deg)');
+                    }
                 };
                 row.addEventListener('click', toggle);
                 row.addEventListener('keydown', (e) => {
@@ -794,6 +811,7 @@
             renderTable(filtered);
         });
 
+        try {
         Chart.defaults.font.family = "'Outfit', 'Inter', sans-serif";
         Chart.defaults.color = '#5f6368';
         Chart.defaults.rtl = false;
@@ -928,6 +946,9 @@
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(applyResponsiveCharts, 150);
         });
+        } catch (chartErr) {
+            console.warn('Charts could not be initialized — data and tabs are unaffected:', chartErr);
+        }
 
         // Tabs: switch between Vendor Breakdown, Transaction Details and Upcoming Schedule
         (function initTabs() {
